@@ -32,6 +32,7 @@ class AllThatDice:
         new_player = Player(player_name)  # Assuming a Player class exists with the appropriate constructor
         self.players[player_name] = new_player
         print(f"Player {player_name} registered successfully.")
+        print("")
 
     def play_game(self):
         """Handles the gameplay logic."""
@@ -40,11 +41,11 @@ class AllThatDice:
             return
         # Display game options here and instantiate a game based on the choice
         game_choice = input("Choose a game to play (OddOrEven/Maxi/Bunco): ").lower()
-        if game_choice == "oddoreven":
+        if game_choice.lower() == "oddoreven":
             self.current_game = OddOrEven(self.players)
-        elif game_choice == "maxi":
+        elif game_choice.lower() == "maxi":
             self.current_game = MaxiGame(self.players)
-        elif game_choice == "bunco":
+        elif game_choice.lower() == "bunco":
             self.current_game = BuncoGame(self.players)
         else:
             print("Invalid game choice.")
@@ -200,51 +201,84 @@ class Leaderboard:
             print(f"{rank}. {player_name}: {score}")
 
 """Class to modify OddOrEven Game class and its attribute """
+import random
+
 class OddOrEven(Game):
-    def __init__(self, title, players):
-        # Call the superclass constructor with the title and the list of players
-        super().__init__(title, players)
+    def __init__(self, players):
+        super().__init__("OddOrEven", players)
 
     def play_round(self):
-        """Play a round of the Odd or Even game."""
         if not self.round_in_play:
             self._start_game()
         self._next_round()
 
+    def play_game(self):
+        """Handles the gameplay logic."""
+        if not self.players:
+            print("No players registered. Please register players before starting a game.")
+            return
 
-   # Assuming that the logic for a round of Odd or Even is implemented here
-        # For example, each player guesses if the roll of the die will be odd or even
+        # Display game options here and instantiate a game based on the choice
+        game_choice = input("Choose a game to play (OddOrEven/Maxi/Bunco): ").lower()
+        if game_choice == "oddoreven":
+            self.current_game = OddOrEven(self.players)  # Pass the list of players here
+        elif game_choice == "maxi":
+            self.current_game = MaxiGame(self.players)  # Pass the list of players here
+        elif game_choice == "bunco":
+            self.current_game = BuncoGame(self.players)  # Pass the list of players here
+        else:
+            print("Invalid game choice.")
+            return
 
-        for player in self.players:
-            print(f"{player.get_name()}'s turn:")
-            guess = input(f"{player.get_name()}, guess 'odd' or 'even': ").lower()
-            while guess not in ["odd", "even"]:
-                print("Invalid guess. Please type 'odd' or 'even'.")
+        # Start and manage the game
+        self.current_game.start_game()
+        # Initialize a list of player scores
+        player_scores = {player.get_name(): 0 for player in self.players}
+
+        # Simulate 3 rounds of the game (you can adjust the number of rounds)
+        for round_number in range(3):
+            print(f"Round {round_number + 1} starts.")
+            for player in self.players:
+                print(f"{player.get_name()}'s turn:")
                 guess = input(f"{player.get_name()}, guess 'odd' or 'even': ").lower()
+                while guess not in ["odd", "even"]:
+                    print("Invalid guess. Please type 'odd' or 'even'.")
+                    guess = input(f"{player.get_name()}, guess 'odd' or 'even': ").lower()
 
-            die = Dice()
-            roll = die.roll()
-            print(f"The dice rolled a {roll}")
+                die = Die()
+                roll = die.roll()
+                print(f"The dice rolled a {roll}")
 
-            if ((roll % 2 == 0 and guess == "even") or (roll % 2 != 0 and guess == "odd")):
-                print("Correct guess!")
-                # Implement the logic for winning the round
-                player.update_games_won()
-            else:
-                print("Wrong guess.")
-                # Implement the logic for losing the round
+                if ((roll % 2 == 0 and guess == "even") or (roll % 2 != 0 and guess == "odd")):
+                    print("Correct guess!")
+                    player_scores[player.get_name()] += 1
+                else:
+                    print("Wrong guess.")
 
-            player.update_games_played()
+            # Display round results
+            print("Round Results:")
+            for player_name, score in player_scores.items():
+                print(f"{player_name}: {score} points")
 
-        # After the round, determine if the game is over and if there's a winner
+        # Determine the round winner
+        round_winner = max(player_scores, key=player_scores.get)
+        print(f"Round {self.current_round} winner: {round_winner}")
+        self.current_round += 1
+
+        # After 3 rounds, determine the game winner
         self.check_win_condition()
 
     def check_win_condition(self):
-        """Check if the game has been won."""
-        # Implement the logic to check if the game has been won
+        # Implement the logic to check if a player has won the game
         # For example, if a player reaches a certain number of points, they win
-        # If the game is over, call self._end_game()
-        pass
+        winning_score = 5  # Adjust this to your desired winning score
+        for player in self.players:
+            if player_scores[player.get_name()] >= winning_score:
+                self._end_game(winner=player)
+                return
+
+        # If no one has won yet, continue to the next round
+        self._next_round()
 
     def start_game(self):
         """Starts the game of Odd or Even."""
@@ -336,9 +370,7 @@ class Die:
         self.value = None
 
     def roll(self):
-        """Roll the die and return the result."""
-        self.value = random.randint(1, self.sides)
-        return self.value
+        return random.randint(1, 6)
 
     def __str__(self):
         return f"A {self.sides}-sided die with a current value of {self.value}"
