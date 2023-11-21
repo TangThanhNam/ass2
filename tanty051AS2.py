@@ -177,16 +177,19 @@ class Game:
 """Class to modify the top player class and their attribute """
 class Leaderboard:
     def __init__(self):
-        self.player_scores = {}  # Assume we're keeping track of scores by player name
+        self.player_scores = {}  # Dictionary to keep track of scores by player name
 
     def add_player(self, player):
+        """Add a player to the leaderboard."""
         if player.name not in self.player_scores:
-            self.player_scores[player.name] = player.get_chips()
+            self.player_scores[player.name] = player.chips
 
     def update_leaderboard(self, player):
-        self.player_scores[player.name] = player.get_chips()
+        """Update a player's score on the leaderboard."""
+        self.player_scores[player.name] = player.chips
 
     def display_leaderboard(self):
+        """Display the leaderboard."""
         if not self.player_scores:
             print("No players to display on the leaderboard.")
             return
@@ -249,16 +252,30 @@ class OddOrEven(Game):
         while not self.game_over:
             self.play_round()
 
+"""Class to modify Bunco Game class and its attribute """
 class Bunco(Game):
-    def __init__(self, playerManager):
-        self.__playerManager = playerManager
+    def __init__(self, title, players):
+        super().__init__(title, players)
 
     def noPlayerPrompt(self):
         noPlayer = input("How many players? ")
         # Check the number of players and set it in your logic
         
+    
+    def play(self):
+        """Play the Bunco game."""
+        if not self.players:
+            print("No players registered. Please register players before starting the game.")
+            return
+
+    def start_game(self):
+        """Starts the Bunco game."""
+        self._start_game()
+        while not self.game_over:
+            self.play()
+
     def playerNamePrompt(self):
-        for i in range(1, self.__noPlayer):
+        for i in range(1, self.__noPlayer + 1):  # Fix range to include the last player
             validPlayer = False
             while not validPlayer:
                 playerName = input(f"What is the name of player #{i}?\n> ")
@@ -267,24 +284,29 @@ class Bunco(Game):
                     if self.__playerManager.checkCurrentPlayer(playerName):
                         print("Player already in the game.")
                     else:
-                        print("Playing Bunco, asking for bid")
+                        print(f"Player {playerName} registered successfully.")
+                        self.__playerManager.addCurrentPlayer(playerName)
                         validPlayer = True
                 else:
                     print("Player does not exist")
 
-    def play(self):
-        # Implement Bunco game logic
-        pass
 
-
+"""Class to modify Maxi Game class and its attribute """
 class Maxi(Game):
-    def __init__(self, playerManager):
-        self.__playerManager = playerManager
+    def __init__(self, title, players):
+        # Call the superclass constructor with the title and the list of players
+        super().__init__(title, players)
 
     def noPlayerPrompt(self):
         noPlayer = input("How many players? ")
         # Check the number of players and set it in your logic
         
+    def play(self):
+        """Play the Maxi game."""
+        if not self.players:
+            print("No players registered. Please register players before starting the game.")
+            return
+
     def playerNamePrompt(self):
         for i in range(1, self.__noPlayer):
             validPlayer = False
@@ -300,10 +322,11 @@ class Maxi(Game):
                 else:
                     print("Player does not exist")
 
-    def play(self):
-        # Implement Maxi game logic
-        pass
-
+    def start_game(self):
+        """Starts the Maxi game."""
+        self._start_game()
+        while not self.game_over:
+            self.play()
 
 
 """Class to generate dice"""
@@ -336,8 +359,36 @@ class ValidPlayerNumber:
 
 
 
+"""Class for chip"""
+class Chip:
+    def __init__(self, value):
+        self.value = value
+        self.bid = None
 
-        
+    def get_value(self):
+        return self.value
+
+    def set_value(self, value):
+        self.value = value
+
+    def add_bid(self, amount):
+        if self.bid is None:
+            self.bid = 0
+        self.bid += amount
+
+    def set_bid(self, amount):
+        self.bid = amount
+
+    def get_bid(self):
+        return self.bid
+
+    def clear_bid(self):
+        self.bid = None
+
+    def __str__(self):
+        return f"Chip with value {self.value}, bid: {self.bid if self.bid is not None else 'None'}"
+
+
 # Assuming other classes (Player, OddOrEven, MaxiGame, BuncoGame, Leaderboard) are defined appropriately
 # according to the UML diagram and provided snippets.
 if __name__ == "__main__":
