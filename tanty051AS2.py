@@ -131,12 +131,15 @@ class Player:
 
 """Class to modify Games class and their attribute """
 class Game:
-    def __init__(self, title, players):
+    def __init__(self, title, players, max_players, min_players):
         self.title = title
         self.players = players  # This should be a list of Player objects
         self.current_round = 0
         self.round_in_play = False
         self.winner = None
+        self.max_players = max_players
+        self.min_players = min_players
+
 
     def _start_game(self):
         """Protected method to perform the start game setup."""
