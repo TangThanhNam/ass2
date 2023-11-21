@@ -20,7 +20,7 @@ class AllThatDice:
         # Options for menu
         self.options = {'r': self.register_player, 'p': self.play_game, 
                         's': self.display_leaderboard, 'q': self.quit}
-
+    
     def register_player(self):
         """Handles the registration of a player."""
         player_name = input("Enter player name: ")
@@ -54,19 +54,21 @@ class AllThatDice:
 
     def display_leaderboard(self):
         """Displays the leaderboard."""
-        # Assuming Leaderboard class exists with a method to display the leaderboard
+        # Ensure Leaderboard class exists with a method to display the leaderboard
         leaderboard = Leaderboard()  # Assuming Leaderboard class has the appropriate constructor
-        leaderboard.display()  # Assuming a method to display the leaderboard
-
+        leaderboard.display_leaderboard()  # Correct method name to match the Leaderboard class definition
+    
     def quit(self):
         """Quits the application."""
         print("Exiting All That Dice. Thank you for playing!")
         exit()
 
     def run(self):
-        """Main method that runs the application."""
+        """Main method that runs the application"""
+        print("Welcome to All That Dice!")
+        print("Developed by Alan Turing")
+        print("COMP 1048 Object-Oriented Programming")
         while True:
-            print("Welcome to All That Dice!")
             print("Please choose an option:")
             print("[r] Register Player")
             print("[p] Play Game")
@@ -81,12 +83,13 @@ class AllThatDice:
 
 """Class to modify Player and their attribute """
 class Player:
-    def __init__(self, name, chips, games_played, games_won, bid_amount):
+    def __init__(self, name, chips=100, games_played=0, games_won=0, bid_amount=0):
         self.name = name
         self.chips = chips
         self.games_played = games_played
         self.games_won = games_won
         self.bid_amount = bid_amount
+
 
     def get_name(self):
         return self.name
@@ -135,9 +138,14 @@ class Game:
         self.winner = None
 
     def _start_game(self):
-        """Starts the game."""
+        """Protected method to perform the start game setup."""
         print(f"Starting game: {self.title}")
         self.round_in_play = True
+        self.current_round = 1
+
+    def start_game(self):
+        """Public method to start the game."""
+        self._start_game()
 
     def _end_game(self):
         """Ends the game."""
@@ -166,50 +174,193 @@ class Game:
         # Placeholder for checking logic
         pass
 
+"""Class to modify the top player class and their attribute """
+class Leaderboard:
+    def __init__(self):
+        self.player_scores = {}  # Assume we're keeping track of scores by player name
+
+    def add_player(self, player):
+        if player.name not in self.player_scores:
+            self.player_scores[player.name] = player.get_chips()
+
+    def update_leaderboard(self, player):
+        self.player_scores[player.name] = player.get_chips()
+
+    def display_leaderboard(self):
+        if not self.player_scores:
+            print("No players to display on the leaderboard.")
+            return
+        # Sort the leaderboard by chips, descending
+        sorted_scores = sorted(self.player_scores.items(), key=lambda item: item[1], reverse=True)
+        print("Leaderboard:")
+        for rank, (player_name, score) in enumerate(sorted_scores, start=1):
+            print(f"{rank}. {player_name}: {score}")
+
 """Class to modify OddOrEven Game class and its attribute """
 class OddOrEven(Game):
-    def __init__(self, players):
-        super().__init__("Odd or Even", players)
+    def __init__(self, title, players):
+        # Call the superclass constructor with the title and the list of players
+        super().__init__(title, players)
 
     def play_round(self):
-        """Implements playing a round specific to OddOrEven."""
+        """Play a round of the Odd or Even game."""
         if not self.round_in_play:
             self._start_game()
         self._next_round()
-        # Round play logic for OddOrEven
 
-    def play_turn(self, player):
-        """Implements playing a turn for the given player."""
-        # Turn play logic for OddOrEven
-        pass
+
+   # Assuming that the logic for a round of Odd or Even is implemented here
+        # For example, each player guesses if the roll of the die will be odd or even
+
+        for player in self.players:
+            print(f"{player.get_name()}'s turn:")
+            guess = input(f"{player.get_name()}, guess 'odd' or 'even': ").lower()
+            while guess not in ["odd", "even"]:
+                print("Invalid guess. Please type 'odd' or 'even'.")
+                guess = input(f"{player.get_name()}, guess 'odd' or 'even': ").lower()
+
+            die = Dice()
+            roll = die.roll()
+            print(f"The dice rolled a {roll}")
+
+            if ((roll % 2 == 0 and guess == "even") or (roll % 2 != 0 and guess == "odd")):
+                print("Correct guess!")
+                # Implement the logic for winning the round
+                player.update_games_won()
+            else:
+                print("Wrong guess.")
+                # Implement the logic for losing the round
+
+            player.update_games_played()
+
+        # After the round, determine if the game is over and if there's a winner
+        self.check_win_condition()
 
     def check_win_condition(self):
-        """Checks the win condition specific to OddOrEven."""
-        # Win condition checking logic for OddOrEven
+        """Check if the game has been won."""
+        # Implement the logic to check if the game has been won
+        # For example, if a player reaches a certain number of points, they win
+        # If the game is over, call self._end_game()
         pass
 
+    def start_game(self):
+        """Starts the game of Odd or Even."""
+        self._start_game()
+        while not self.game_over:
+            self.play_round()
+
+class Bunco(Game):
+    def __init__(self, playerManager):
+        self.__playerManager = playerManager
+
+    def noPlayerPrompt(self):
+        noPlayer = input("How many players? ")
+        # Check the number of players and set it in your logic
+        
+    def playerNamePrompt(self):
+        for i in range(1, self.__noPlayer):
+            validPlayer = False
+            while not validPlayer:
+                playerName = input(f"What is the name of player #{i}?\n> ")
+                existed = self.__playerManager.checkExistedPlayer(playerName)
+                if existed:
+                    if self.__playerManager.checkCurrentPlayer(playerName):
+                        print("Player already in the game.")
+                    else:
+                        print("Playing Bunco, asking for bid")
+                        validPlayer = True
+                else:
+                    print("Player does not exist")
+
+    def play(self):
+        # Implement Bunco game logic
+        pass
+
+
+class Maxi(Game):
+    def __init__(self, playerManager):
+        self.__playerManager = playerManager
+
+    def noPlayerPrompt(self):
+        noPlayer = input("How many players? ")
+        # Check the number of players and set it in your logic
+        
+    def playerNamePrompt(self):
+        for i in range(1, self.__noPlayer):
+            validPlayer = False
+            while not validPlayer:
+                playerName = input(f"What is the name of player #{i}?\n> ")
+                existed = self.__playerManager.checkExistedPlayer(playerName)
+                if existed:
+                    if self.__playerManager.checkCurrentPlayer(playerName):
+                        print("Player already in the game.")
+                    else:
+                        self.__playerManager.addCurrentPlayer(playerName)
+                        validPlayer = True
+                else:
+                    print("Player does not exist")
+
+    def play(self):
+        # Implement Maxi game logic
+        pass
+
+
+
 """Class to generate dice"""
-class Dice:
-    def __init__(self, die):
-        self.__die = die
+class Die:
+    def __init__(self, sides=6):
+        self.sides = sides
+        self.value = None
 
     def roll(self):
-        self.__die = random.randint(1, 6)
-        if self.__die == 1:
-            print("⚀\n")
-        elif self.__die == 2:
-            print("⚁\n")
-        elif self.__die == 3:     
-            print("⚂\n")
-        elif self.__die == 4:
-            print("⚃\n")
-        elif self.__die == 5:
-            print("⚄\n")
-        elif self.__die == 6:
-            print("⚅\n")
+        """Roll the die and return the result."""
+        self.value = random.randint(1, self.sides)
+        return self.value
+
+    def __str__(self):
+        return f"A {self.sides}-sided die with a current value of {self.value}"
+
+"""Class to check valid number of Players"""
+class ValidPlayerNumber:
+    def __init__(self, min_players, max_players):
+        self.min_players = min_players
+        self.max_players = max_players
+
+    def is_valid(self, num_players):
+        """Check if the number of players is within the valid range."""
+        return self.min_players <= num_players <= self.max_players
+
+    def get_valid_range(self):
+        """Get the valid range of players as a tuple (min_players, max_players)."""
+        return self.min_players, self.max_players
+
+
+
+
+        
 # Assuming other classes (Player, OddOrEven, MaxiGame, BuncoGame, Leaderboard) are defined appropriately
 # according to the UML diagram and provided snippets.
-
 if __name__ == "__main__":
     game_app = AllThatDice()
     game_app.run()
+    # Create a six-sided die
+    six_sided_die = Die()
+     # Roll the die and print the result
+    result = six_sided_die.roll()
+    print(f"Rolling the die... Result: {result}")
+
+    # Roll the die again
+    result = six_sided_die.roll()
+    print(f"Rolling the die again... Result: {result}")
+
+
+    # Define a valid player range for a game (e.g., between 2 and 4 players)
+    valid_player_range = ValidPlayerNumber(min_players=2, max_players=4)
+
+    # Check if a specific number of players is valid
+    num_players = 3  # Change this to the number of players you want to check
+    if valid_player_range.is_valid(num_players):
+        print(f"{num_players} players is a valid number for this game.")
+    else:
+        min_players, max_players = valid_player_range.get_valid_range()
+        print(f"Number of players must be between {min_players} and {max_players}.")
