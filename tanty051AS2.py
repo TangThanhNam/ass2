@@ -207,13 +207,9 @@ class Leaderboard:
 import random
 
 class OddOrEven(Game):
-    def __init__(self, players):
-        super().__init__("OddOrEven", players)
-
-    def play_round(self):
-        if not self.round_in_play:
-            self._start_game()
-        self._next_round()
+    def __init__(self, players, max_players=4, min_players=2):
+        super().__init__("OddOrEven", players, max_players, min_players)
+        self.game_over = False  # Initialize the game_over attribute
 
     def play_game(self):
         """Handles the gameplay logic."""
@@ -221,20 +217,6 @@ class OddOrEven(Game):
             print("No players registered. Please register players before starting a game.")
             return
 
-        # Display game options here and instantiate a game based on the choice
-        game_choice = input("Choose a game to play (OddOrEven/Maxi/Bunco): ").lower()
-        if game_choice == "oddoreven":
-            self.current_game = OddOrEven(self.players)  # Pass the list of players here
-        elif game_choice == "maxi":
-            self.current_game = MaxiGame(self.players)  # Pass the list of players here
-        elif game_choice == "bunco":
-            self.current_game = BuncoGame(self.players)  # Pass the list of players here
-        else:
-            print("Invalid game choice.")
-            return
-
-        # Start and manage the game
-        self.current_game.start_game()
         # Initialize a list of player scores
         player_scores = {player.get_name(): 0 for player in self.players}
 
@@ -248,6 +230,7 @@ class OddOrEven(Game):
                     print("Invalid guess. Please type 'odd' or 'even'.")
                     guess = input(f"{player.get_name()}, guess 'odd' or 'even': ").lower()
 
+                # Simulate a dice roll (assuming Die class is defined)
                 die = Die()
                 roll = die.roll()
                 print(f"The dice rolled a {roll}")
@@ -287,10 +270,16 @@ class OddOrEven(Game):
         """Starts the game of Odd or Even."""
         self._start_game()
         while not self.game_over:
-            self.play_round()
+            self.play_game()
 
-    def _end_game(self):
-        pass
+    def _end_game(self, winner=None):
+        if winner:
+            print(f"The winner of {self.title} is {winner.get_name()}!")
+        else:
+            print(f"{self.title} ended.")
+        self.round_in_play = False
+
+
     def round_winner(self, player):
         pass
     def game_winner(self, player):
@@ -390,13 +379,15 @@ class Maxi(Game):
 class Die:
     def __init__(self, sides=6):
         self.sides = sides
-        self.value = None
+        self.value = None  # Initialize the value attribute
 
     def roll(self):
-        return random.randint(1, 6)
+        self.value = random.randint(1, self.sides)  # Use self.sides for the number of sides
+        return self.value
 
     def __str__(self):
         return f"A {self.sides}-sided die with a current value of {self.value}"
+
 
 """Class to check valid number of Players"""
 class ValidPlayerNumber:
