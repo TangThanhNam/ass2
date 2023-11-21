@@ -286,6 +286,13 @@ class OddOrEven(Game):
         while not self.game_over:
             self.play_round()
 
+    def _end_game(self):
+        pass
+    def round_winner(self, player):
+        pass
+    def game_winner(self, player):
+        pass
+
 """Class to modify Bunco Game class and its attribute """
 class Bunco(Game):
     def __init__(self, title, players):
@@ -325,6 +332,13 @@ class Bunco(Game):
                     print("Player does not exist")
 
 
+    def _end_game(self):
+        pass
+    def round_winner(self, player):
+        pass
+    def game_winner(self, player):
+        pass
+
 """Class to modify Maxi Game class and its attribute """
 class Maxi(Game):
     def __init__(self, title, players):
@@ -362,6 +376,12 @@ class Maxi(Game):
         while not self.game_over:
             self.play()
 
+    def _end_game(self):
+        pass
+    def round_winner(self, player):
+        pass
+    def game_winner(self, player):
+        pass
 
 """Class to generate dice"""
 class Die:
