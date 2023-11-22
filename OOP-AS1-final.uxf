@@ -1,0 +1,155 @@
+<diagram program="umletino" version="15.1"><zoom_level>9</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>531</x><y>333</y><w>189</w><h>288</h></coordinates><panel_attributes>Player
+--
+- name: str
+- chips: int
+- games_play: int
+- games_won: int
+- num_of_chip_bids: int
+--
++__init__(int = 100): None
++ get_name(): str
++ get_chips(): int
++ get_games_player(): int
++ get_games_won(): int
++ update_chips(amount): int
++ update_games_player(): str
++ update_games_won(): int
++ bid_ammount(): int
++ collect_chip(): int
++ add_bid()
++ win()
++ lose()</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>945</x><y>378</y><w>189</w><h>297</h></coordinates><panel_attributes>Game
+--
+- title: str
++ min_players: int
++ max_players: int
+- player: dict
+- current_num_player: int
+- round: int
+- winner_of_round: Player
+- winner_of_game: Player 
+- players_dict: dict
+--
++ __int__(str, int, int): None
++ get_title(): str
++ start_game()
++ _end_game()
++ next_round()
++ calculate_round_scores()
++ calculate_winner_of_round()
++ calculate_winner_of_game()
++ check_valid_num_player(): bool</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1161</x><y>819</y><w>198</w><h>216</h></coordinates><panel_attributes>Maxi
+--
+- playerScore: int
+- roundNo: int
+- numPlayers: int
+--
++ play_game()
++ start_game
++ next_turn()
++ play_round()
++ throw_dice(player: str, strength: int)
++ add_score(player: str)
++ check_win_condition()
++ _end_game()
++ game_winner()
++ round_winner()
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>927</x><y>36</y><w>225</w><h>261</h></coordinates><panel_attributes>AllThatDice
+--
++ register_player[]
+- options: ['r', 's', 'p', 'q']
+- player_name: str
+--
++ display_option():str
++ register(): None
++ display_leader_board(): None
++ run_game() None
++ Play_odd_or_even(dict, OodOrEven): None
++ play_maxi(dict, Maxi): None
++ play_bunco(dict, Bunco): None
++ set_player_count(Game): int
++ quit_game()
++ run()</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>720</x><y>819</y><w>198</w><h>216</h></coordinates><panel_attributes>OddOrEven
+--
+-num_players: int
+-player_scores: int
+- round_no: int
+--
++ play_game()
++ start_game
++ next_turn()
++ play_round()
++ throw_dice(player: str, strength: int)
++ add_score(player: str)
++ check_win_condition()
++ _end_game()
++ game_winner()
++ round_winner()
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1233</x><y>387</y><w>189</w><h>126</h></coordinates><panel_attributes>ValidPlayerNumber
+--
+- game_title: str
+- valid_num_of_player: int
+- min_num_of_player: int
+- max_num_of_player: int
+--
++ check_valid_num_player()
++ display_error()
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>936</x><y>819</y><w>207</w><h>216</h></coordinates><panel_attributes>Bunco
+--
+- playerScores: int
+- roundNo: int
+- numPlayers: int
+--
++ play_game()
++ start_game
++ next_turn()
++ play_round()
++ throw_dice(player: str, strength: int)
++ add_score(player: str)
++ check_win_condition()
++ _end_game()
++ game_winner()
++ round_winner()</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>198</x><y>369</y><w>225</w><h>117</h></coordinates><panel_attributes>Leaderboard
+--
++ player: []
+--
++ add_player(player: str)
++ remove_player(player: str)
++ update_leaderboard(player: str, win: boolen)
++ display_leaderboard()
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1026</x><y>666</y><w>27</w><h>171</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;170</additional_attributes></element><element><id>Relation</id><coordinates><x>1026</x><y>774</y><w>243</w><h>63</h></coordinates><panel_attributes>lt=-</panel_attributes><additional_attributes>10;10;250;10;250;50</additional_attributes></element><element><id>Relation</id><coordinates><x>801</x><y>774</y><w>252</w><h>63</h></coordinates><panel_attributes>lt=-</panel_attributes><additional_attributes>260;10;10;10;10;50</additional_attributes></element><element><id>Relation</id><coordinates><x>711</x><y>432</y><w>252</w><h>36</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m1=1
+m2=1..5</panel_attributes><additional_attributes>260;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>414</x><y>423</y><w>135</w><h>45</h></coordinates><panel_attributes>lt=&lt;-
+m1=0..*
+m2=1
+contains </panel_attributes><additional_attributes>130;20;10;20</additional_attributes></element><element><id>Relation</id><coordinates><x>315</x><y>135</y><w>630</w><h>252</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m1=1
+m2=1</panel_attributes><additional_attributes>680;10;10;10;10;260</additional_attributes></element><element><id>Relation</id><coordinates><x>612</x><y>198</y><w>333</w><h>153</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m1=1
+m2=1..*</panel_attributes><additional_attributes>350;10;10;10;10;150</additional_attributes></element><element><id>UMLClass</id><coordinates><x>945</x><y>1098</y><w>189</w><h>81</h></coordinates><panel_attributes>Die
+--
+- face_score: int
+--
++ roll( strength: int)
++ get_face_score()</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1125</x><y>1026</y><w>144</w><h>126</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-
+</panel_attributes><additional_attributes>10;120;140;120;140;10</additional_attributes></element><element><id>Relation</id><coordinates><x>801</x><y>1026</y><w>162</w><h>126</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>160;120;10;120;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>1125</x><y>432</y><w>126</w><h>36</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m1=1
+m2=1</panel_attributes><additional_attributes>10;10;120;10</additional_attributes></element><element><id>Relation</id><coordinates><x>1026</x><y>288</y><w>36</w><h>108</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m1=1
+m2=1</panel_attributes><additional_attributes>10;10;10;100</additional_attributes></element><element><id>UMLClass</id><coordinates><x>522</x><y>684</y><w>189</w><h>117</h></coordinates><panel_attributes>Chip
+--
+- bid_amount: int
+--
++ add_bid(amount: int)
++ get_bid(amount: int)
++ set_bid(amount: int)
++ clear_bid(): none
++ set_value(): str</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>702</x><y>612</y><w>261</w><h>126</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>270;10;40;10;40;120;10;120</additional_attributes></element><element><id>Relation</id><coordinates><x>612</x><y>612</y><w>90</w><h>90</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m1=1
+m2=1..*
+is owned by</panel_attributes><additional_attributes>10;10;10;80</additional_attributes></element><element><id>UMLNote</id><coordinates><x>684</x><y>45</y><w>216</w><h>90</h></coordinates><panel_attributes>Full Name: Thanh Nam Tang
+MailID: tanty051
+StudentID: 110394306
+bg=pink</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1026</x><y>1026</y><w>27</w><h>90</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;80;10;10</additional_attributes></element></diagram>
